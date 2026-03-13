@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 4%;
+    --primary: 160 84% 30%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 24 95% 53%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 160 84% 30%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 160 84% 30%;
+    --radius: 0.625rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-aretech-green to-aretech-orange;
+  }
+  
+  .bg-gradient-hero {
+    background: linear-gradient(135deg, #0A0A0A 0%, #1a1a2e 50%, #0A0A0A 100%);
+  }
+  
+  .bg-gradient-green {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  }
+  
+  .bg-gradient-orange {
+    background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+  }
+  
+  .glass-effect {
+    @apply backdrop-blur-xl bg-white/80 border border-white/20;
+  }
+  
+  .glass-dark {
+    @apply backdrop-blur-xl bg-black/40 border border-white/10;
+  }
+  
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
+  
+  .btn-primary {
+    @apply px-8 py-4 bg-gradient-green text-white font-semibold rounded-full 
+           transition-all duration-300 hover:shadow-glow hover:scale-105 
+           active:scale-95;
+  }
+  
+  .btn-secondary {
+    @apply px-8 py-4 bg-gradient-orange text-white font-semibold rounded-full 
+           transition-all duration-300 hover:shadow-glow-orange hover:scale-105 
+           active:scale-95;
+  }
+  
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-24;
+  }
+  
+  .heading-xl {
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight;
+  }
+  
+  .heading-lg {
+    @apply text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight;
+  }
+  
+  .heading-md {
+    @apply text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight;
+  }
+  
+  .body-lg {
+    @apply text-lg sm:text-xl text-muted-foreground leading-relaxed;
+  }
+  
+  .body-md {
+    @apply text-base sm:text-lg text-muted-foreground leading-relaxed;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #059669;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #047857;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(5, 150, 105, 0.3);
+}
