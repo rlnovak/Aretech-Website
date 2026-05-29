@@ -60,8 +60,17 @@ const HeroSection = () => {
       {/* Content */}
       <div className="relative z-10 w-full section-padding py-20">
         <div className="max-w-6xl mx-auto text-center">
+          {/* Logo */}
+          <div className="reveal opacity-0 mb-8 flex justify-center">
+            <img
+              src="/images/aretech-logo-original.png"
+              alt="Aretech"
+              className="h-20 sm:h-24 md:h-28 w-auto"
+            />
+          </div>
+
           {/* Badge */}
-          <div className="reveal opacity-0 mb-8">
+          <div className="reveal opacity-0 mb-8" style={{ animationDelay: '0.05s' }}>
             <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-aretech-green/10 
                            text-aretech-green text-sm font-semibold rounded-full border border-aretech-green/20">
               <Sparkles className="w-4 h-4" />
