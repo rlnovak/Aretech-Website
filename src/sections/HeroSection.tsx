@@ -38,7 +38,7 @@ const HeroSection = () => {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white pt-20"
+      className="relative min-h-screen flex flex-col overflow-hidden bg-white pt-20"
     >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -58,17 +58,8 @@ const HeroSection = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 w-full section-padding py-20">
-        <div className="max-w-6xl mx-auto text-center">
-          {/* Logo */}
-          <div className="reveal opacity-0 mb-8 flex justify-center">
-            <img
-              src="/images/aretech-logo-original.png"
-              alt="Aretech"
-              className="h-20 sm:h-24 md:h-28 w-auto"
-            />
-          </div>
-
+      <div className="relative z-10 w-full section-padding py-20 flex-1 flex items-center justify-center">
+        <div className="max-w-6xl mx-auto text-center w-full">
           {/* Badge */}
           <div className="reveal opacity-0 mb-8" style={{ animationDelay: '0.05s' }}>
             <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-aretech-green/10 

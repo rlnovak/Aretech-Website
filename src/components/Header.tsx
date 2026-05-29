@@ -40,24 +40,32 @@ const Header = () => {
           {/* Logo */}
           <a
             href="#"
-            className="flex items-center gap-3 group"
+            className="flex items-center group"
             onClick={(e) => {
               e.preventDefault();
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
+            aria-label="Aretech — voltar ao topo"
           >
-            <img
-              src="/images/pantera-logo.png"
-              alt="Aretech"
-              className="h-10 w-auto transition-transform duration-300 group-hover:scale-110"
-            />
-            <span
-              className={`text-xl font-semibold tracking-tight transition-colors duration-300 ${
-                isScrolled ? 'text-aretech-black' : 'text-aretech-black'
-              }`}
+            <div
+              className="transition-transform duration-300 group-hover:scale-105"
+              style={{
+                maskImage:
+                  'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
+                WebkitMaskImage:
+                  'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
+                maskComposite: 'intersect',
+                WebkitMaskComposite: 'source-in',
+              }}
             >
-              Aretech.
-            </span>
+              <img
+                src="/images/aretech-logo-original.png"
+                alt="Aretech"
+                className={`w-auto select-none pointer-events-none transition-all duration-500 ${
+                  isScrolled ? 'h-[72px] md:h-[84px]' : 'h-24 md:h-[120px]'
+                }`}
+              />
+            </div>
           </a>
 
           {/* Desktop Navigation */}
