@@ -1,0 +1,266 @@
+{
+  "name": "Form_submission_webhook_aretech",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "b9d4fa4b-7da9-4ec3-b688-73936c5af64d",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        144
+      ],
+      "id": "56a3f98b-2ae5-4a97-a59a-d97c1c010486",
+      "name": "Webhook",
+      "webhookId": "b9d4fa4b-7da9-4ec3-b688-73936c5af64d"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08JX0NJEGN",
+          "mode": "list",
+          "cachedResultName": "contatos-formulario"
+        },
+        "text": "={{ $json.nome }} {{ $json.sobrenome }} acabou de preencher o formulario de contato no site da Aretech.\n\nNome: {{ $json.nome }}\nSobrenome: {{ $json.sobrenome }}\nE-mail: {{ $json.email }}\nTelefone: {{ $json.telefone }}\nEmpresa: {{ $json.empresa }}\nMensagem: {{ $json.mensagem }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        144
+      ],
+      "id": "ac8fc0bb-0482-4c27-8860-9a3117bc3bed",
+      "name": "Notifica via Slack",
+      "webhookId": "83fbe634-5906-449a-be91-460a12709d2e",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "g8oY0fMRNnHsVYMu",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "contato@aretech.com.br",
+        "subject": "=[LEAD] Formulário de contato - {{ $json.body['your-name'] }} {{ $json.body['your-surname'] }}",
+        "message": "={{ $json.nome }} {{ $json.sobrenome }} preencheu o formulário de contato da Aretech, e deixou a seguinte mensagem:\n\n{{ $json.mensagem }}\n\nDados para contato:\n\nNome: {{ $json.nome }}\nSobrenome: {{ $json.sobrenome }}\nE-mail: {{ $json.email }}\nTelefone: {{ $json.telefone }}\nEmpresa: {{ $json.empresa }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        480,
+        352
+      ],
+      "id": "06bda2f6-2c84-4fae-a44c-79d3be9bfbc9",
+      "name": "Envia email para contato@aretech.com.br",
+      "webhookId": "a5b32974-bfa1-4e52-a075-8e31f2cb4eee",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "bu6HD6uQ1dxqgdrA",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ebzz17ePs9QFJczQUyO9qtOgqEH2N14Cc3nU8yaqtFk",
+          "mode": "list",
+          "cachedResultName": "Contatos Aretech",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ebzz17ePs9QFJczQUyO9qtOgqEH2N14Cc3nU8yaqtFk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Contatos_site",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ebzz17ePs9QFJczQUyO9qtOgqEH2N14Cc3nU8yaqtFk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nome": "={{ $json.nome }}",
+            "Sobrenome": "={{ $json.sobrenome }}",
+            "Email": "={{ $json.email }}",
+            "Telefone": "={{ $json.telefone }}",
+            "Empresa": "={{ $json.empresa }}",
+            "Mensagem": "={{ $json.mensagem }}",
+            "Data": "={{ $json.data }}",
+            "Hora": "={{ $json.hora }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Sobrenome",
+              "displayName": "Sobrenome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Empresa",
+              "displayName": "Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Mensagem",
+              "displayName": "Mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hora",
+              "displayName": "Hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        -48
+      ],
+      "id": "e9548e5e-9091-4624-bd0e-d4a297dfb029",
+      "name": "Adiciona contato",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "phdiYKfjOtcsZWJI",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const hoje = DateTime.local().toFormat('dd/MM/yyyy')\nconst agora = DateTime.local().toFormat('HH:mm:ss');\nreturn {\"nome\": $input.first().json.body['your-name'],\n        \"sobrenome\": $input.first().json.body['your-surname'],\n        \"email\": $input.first().json.body['your-email'],\n        \"empresa\": $input.first().json.body['your-business'],\n        \"telefone\": $input.first().json.body['your-phone'],\n        \"mensagem\": $input.first().json.body['your-message'],\n        \"data\":hoje,\n        \"hora\": agora};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        144
+      ],
+      "id": "7ddd83e5-b996-4c1c-bec5-c2701400a064",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Adiciona contato",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notifica via Slack",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Envia email para contato@aretech.com.br",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "02c18b83-a9ec-43fa-83a0-d745b9cf444f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "caeaac615c98c8471d92e7bf357c2f0c8254c5ed1cc75f242f2c23af7b723feb"
+  },
+  "id": "kuDfaOPuwOuFYC0m",
+  "tags": []
+}

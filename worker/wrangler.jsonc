@@ -1,0 +1,39 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "aretech-chat",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "CHAT_SESSION",
+        "class_name": "ChatSession"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["ChatSession"]
+    }
+  ],
+  "vars": {
+    // Provedor primário: "openrouter" ou "openai". Fallback é automático para o outro.
+    "PROVIDER": "openrouter",
+    "OPENROUTER_MODEL": "openai/gpt-oss-120b:free",
+    "OPENAI_MODEL": "gpt-5-mini",
+    // Planilha Google (mesma do formulário antigo).
+    "SHEET_ID": "1ebzz17ePs9QFJczQUyO9qtOgqEH2N14Cc3nU8yaqtFk",
+    "SHEET_TAB": "Contatos_site",
+    // Origens permitidas (CORS). Use "*" em dev; restrinja em produção.
+    "ALLOWED_ORIGINS": "*"
+  }
+  // Secrets (NÃO ficam aqui — use `wrangler secret put`):
+  //   OPENROUTER_API_KEY
+  //   OPENAI_API_KEY
+  //   GOOGLE_SERVICE_ACCOUNT   (JSON completo da service account, em uma linha)
+}

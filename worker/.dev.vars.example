@@ -1,0 +1,8 @@
+# Copie para `.dev.vars` (NÃO versionar) para rodar `wrangler dev` localmente.
+# Em produção use `wrangler secret put <NOME>`.
+
+OPENROUTER_API_KEY="sk-or-v1-..."
+OPENAI_API_KEY="sk-..."
+
+# JSON completo da service account do Google, em UMA linha (com \n escapados na private_key).
+GOOGLE_SERVICE_ACCOUNT='{"type":"service_account","project_id":"...","private_key":"-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n","client_email":"aretech-chat@...iam.gserviceaccount.com","token_uri":"https://oauth2.googleapis.com/token"}'

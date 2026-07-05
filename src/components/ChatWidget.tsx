@@ -8,12 +8,30 @@ interface Message {
   timestamp: Date;
 }
 
+// URL do Worker de chat na Cloudflare. Definida em build via VITE_CHAT_API_URL.
+const CHAT_API_URL =
+  import.meta.env.VITE_CHAT_API_URL ?? 'http://localhost:8787/api/chat';
+
+// sessionId estável por visitante, persistido no navegador.
+function getSessionId(): string {
+  try {
+    let id = localStorage.getItem('aretech_chat_session');
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem('aretech_chat_session', id);
+    }
+    return id;
+  } catch {
+    return crypto.randomUUID();
+  }
+}
+
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: 'Olá! Sou o assistente virtual da Aretech. Como posso ajudar você hoje?',
+      text: 'Olá! Sou o assistente da Aretech. Me conta: qual desafio do seu negócio você gostaria de resolver com automação ou IA?',
       sender: 'bot',
       timestamp: new Date(),
     },
@@ -21,6 +39,7 @@ const ChatWidget = () => {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const sessionIdRef = useRef<string>(getSessionId());
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -28,43 +47,53 @@ const ChatWidget = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isTyping]);
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
-
-    const userMessage: Message = {
-      id: messages.length + 1,
-      text: inputValue,
-      sender: 'user',
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-    setInputValue('');
+  const sendToBackend = async (text: string) => {
     setIsTyping(true);
+    try {
+      const res = await fetch(
+        `${CHAT_API_URL}?sessionId=${encodeURIComponent(sessionIdRef.current)}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text }),
+        }
+      );
+      const data = (await res.json()) as { reply?: string; error?: string };
+      const reply =
+        data.reply ||
+        'Desculpe, tive um problema. Fale com a gente no WhatsApp: https://wa.me/5547989007623';
 
-    // Simula resposta do bot (em produção, integrar com n8n)
-    setTimeout(() => {
-      const botResponses = [
-        'Entendi! Para falarmos melhor sobre o seu projeto, que tal agendarmos uma call de 15 minutos?',
-        'Ótima pergunta! Nossos serviços incluem chatbots, automações com IA e consultoria especializada.',
-        'Posso ajudar! Qual é o principal desafio que sua empresa está enfrentando atualmente?',
-        'Perfeito! Deixe seus dados de contato que nossa equipe entrará em contato em breve.',
-      ];
-
-      const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
-
-      const botMessage: Message = {
-        id: messages.length + 2,
-        text: randomResponse,
-        sender: 'bot',
-        timestamp: new Date(),
-      };
-
-      setMessages((prev) => [...prev, botMessage]);
+      setMessages((prev) => [
+        ...prev,
+        { id: prev.length + 1, text: reply, sender: 'bot', timestamp: new Date() },
+      ]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: prev.length + 1,
+          text: 'Estou com uma instabilidade agora. Fale com a gente no WhatsApp: https://wa.me/5547989007623',
+          sender: 'bot',
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
+  };
+
+  const handleSendMessage = async (overrideText?: string) => {
+    const text = (overrideText ?? inputValue).trim();
+    if (!text || isTyping) return;
+
+    setMessages((prev) => [
+      ...prev,
+      { id: prev.length + 1, text, sender: 'user', timestamp: new Date() },
+    ]);
+    setInputValue('');
+    await sendToBackend(text);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -72,6 +101,10 @@ const ChatWidget = () => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleQuickReply = (reply: string) => {
+    handleSendMessage(reply);
   };
 
   const quickReplies = [
@@ -201,11 +234,9 @@ const ChatWidget = () => {
             {quickReplies.map((reply, index) => (
               <button
                 key={index}
-                onClick={() => {
-                  setInputValue(reply);
-                  setTimeout(handleSendMessage, 100);
-                }}
-                className="flex-shrink-0 px-3 py-1.5 bg-gray-100 hover:bg-aretech-green/10
+                onClick={() => handleQuickReply(reply)}
+                disabled={isTyping}
+                className="flex-shrink-0 px-3 py-1.5 bg-gray-100 hover:bg-aretech-green/10 disabled:opacity-50
                          text-gray-600 hover:text-aretech-green text-xs font-medium
                          rounded-full transition-colors whitespace-nowrap"
               >
@@ -229,8 +260,8 @@ const ChatWidget = () => {
                        placeholder:text-gray-400"
             />
             <button
-              onClick={handleSendMessage}
-              disabled={!inputValue.trim()}
+              onClick={() => handleSendMessage()}
+              disabled={!inputValue.trim() || isTyping}
               className="w-11 h-11 bg-aretech-green rounded-full flex items-center justify-center
                        hover:bg-aretech-green-dark transition-colors
                        disabled:opacity-50 disabled:cursor-not-allowed"
