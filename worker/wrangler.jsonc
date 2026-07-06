@@ -30,7 +30,7 @@
     "SHEET_ID": "1ebzz17ePs9QFJczQUyO9qtOgqEH2N14Cc3nU8yaqtFk",
     "SHEET_TAB": "Contatos_site",
     // Origens permitidas (CORS). Use "*" em dev; restrinja em produção.
-    "ALLOWED_ORIGINS": "*"
+    "ALLOWED_ORIGINS": "https://www.aretech.com.br,https://aretech.com.br,https://aretech-website.pages.dev"
   }
   // Secrets (NÃO ficam aqui — use `wrangler secret put`):
   //   OPENROUTER_API_KEY

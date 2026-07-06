@@ -4,5 +4,6 @@ worker/.wrangler/
 worker/.dev.vars
 .env
 .env.local
-.env.production
+# .env.production é versionado de propósito: contém só a URL pública do Worker
+# (VITE_CHAT_API_URL), lida pelo build do Cloudflare Pages. Sem segredos.
 *.log
