@@ -55,25 +55,32 @@ export function buildProviderChain(env: Env): ProviderConfig[] {
   const openaiModel = env.OPENAI_MODEL || "gpt-5-mini";
   const openrouterModel = env.OPENROUTER_MODEL || "openai/gpt-oss-120b:free";
 
-  const push = (p: "openai" | "openrouter") => {
-    if (p === "openai" && env.OPENAI_API_KEY) {
-      chain.push({ provider: "openai", model: openaiModel, apiKey: env.OPENAI_API_KEY });
+  // Modelos free extras (todos com suporte a tools) para dar fallback quando o
+  // primário do OpenRouter estiver rate-limited (429 comum no free tier).
+  // Só entram se forem diferentes do primário.
+  const extraFree = ["qwen/qwen3-next-80b-a3b-instruct:free", "openai/gpt-oss-120b:free"].filter(
+    (m) => m !== openrouterModel
+  );
+
+  const pushOpenRouter = (model: string) => {
+    if (env.OPENROUTER_API_KEY) {
+      chain.push({ provider: "openrouter", model, apiKey: env.OPENROUTER_API_KEY });
     }
-    if (p === "openrouter" && env.OPENROUTER_API_KEY) {
-      chain.push({
-        provider: "openrouter",
-        model: openrouterModel,
-        apiKey: env.OPENROUTER_API_KEY,
-      });
+  };
+  const pushOpenAI = () => {
+    if (env.OPENAI_API_KEY) {
+      chain.push({ provider: "openai", model: openaiModel, apiKey: env.OPENAI_API_KEY });
     }
   };
 
   if (primary === "openai") {
-    push("openai");
-    push("openrouter");
+    pushOpenAI();
+    pushOpenRouter(openrouterModel);
+    extraFree.forEach(pushOpenRouter);
   } else {
-    push("openrouter");
-    push("openai");
+    pushOpenRouter(openrouterModel);
+    extraFree.forEach(pushOpenRouter);
+    pushOpenAI();
   }
 
   if (chain.length === 0) {
@@ -101,8 +108,14 @@ async function callProvider(
     messages,
     tools,
     tool_choice: "auto",
-    temperature: 0.4,
   };
+
+  // Modelos GPT-5 (OpenAI) só aceitam temperature default (1) — omitimos.
+  // Nos demais, usamos 0.4 para respostas mais consistentes.
+  const isGpt5 = /(^|\/)gpt-5/i.test(cfg.model);
+  if (!isGpt5) {
+    body.temperature = 0.4;
+  }
 
   const res = await fetch(ENDPOINTS[cfg.provider], {
     method: "POST",
