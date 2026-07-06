@@ -40,14 +40,39 @@ provedor primário em `PROVIDER` (`openrouter` | `openai`). O fallback é autom�
 ## Setup do Google Service Account (uma vez)
 
 1. No [Google Cloud Console](https://console.cloud.google.com): crie um projeto
-   (ou use um existente) e **ative a Google Sheets API**.
+   (ou use um existente) e **ative a Google Sheets API E a Google Calendar API**
+   (APIs & Services → Library → habilitar as duas).
 2. **IAM & Admin → Service Accounts → Create service account**. Crie uma chave
-   JSON (**Keys → Add key → JSON**) e baixe o arquivo.
+   JSON (**Keys → Add key → JSON**) e baixe o arquivo. Anote o `client_email`
+   (algo como `...@...iam.gserviceaccount.com`).
 3. Abra a planilha [Contatos Aretech](https://docs.google.com/spreadsheets/d/1ebzz17ePs9QFJczQUyO9qtOgqEH2N14Cc3nU8yaqtFk/edit)
-   e **compartilhe com o e-mail da service account** (`...@...iam.gserviceaccount.com`)
-   como **Editor**.
+   e **compartilhe com o e-mail da service account** como **Editor**.
 4. Confirme que a aba se chama `Contatos_site` com as colunas nesta ordem:
    `Nome | Sobrenome | Email | Telefone | Empresa | Mensagem | Data | Hora`.
+
+### Google Calendar (para os agendamentos)
+
+O `agendar_call` cria o evento no calendário definido em `CALENDAR_ID`
+(`wrangler.jsonc`). Como a Service Account não tem agenda própria usável, é
+preciso **compartilhar um calendário real com ela**:
+
+5. No Google Calendar, ao lado do calendário desejado → **Configurações e
+   compartilhamento → Compartilhar com pessoas e grupos específicos** → adicione
+   o `client_email` da service account com a permissão
+   **"Fazer alterações nos eventos"**.
+6. Em `wrangler.jsonc`, ajuste `CALENDAR_ID` para o e-mail desse calendário
+   (ex.: `contato@aretech.com.br`) ou `primary` se for o principal da conta que
+   compartilhou. Faça `wrangler deploy` após alterar.
+
+> **Convite + Google Meet:** em conta **Gmail comum**, a Service Account não
+> consegue enviar convite ao cliente nem gerar link do Meet — a API recusa esses
+> extras. O código detecta isso e **cria o evento mesmo assim** (horário bloqueado
+> + dados do cliente na descrição), retornando um aviso. Convite/Meet automáticos
+> exigem **Google Workspace + domain-wide delegation** da Service Account.
+>
+> **Erro 403 ao agendar** = calendário não compartilhado com a SA, ou a Calendar
+> API não está ativada. O agendamento ainda é salvo na planilha (fallback), mas o
+> evento não é criado até corrigir isso.
 
 ## Secrets
 
