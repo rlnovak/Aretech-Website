@@ -8,9 +8,15 @@ interface Message {
   timestamp: Date;
 }
 
-// URL do Worker de chat na Cloudflare. Definida em build via VITE_CHAT_API_URL.
+// URL do Worker de chat na Cloudflare.
+// Pode ser sobrescrita em build via VITE_CHAT_API_URL (ex.: apontar para um
+// Worker de staging). Em dev (`vite dev`), cai para o Worker local. Em qualquer
+// build de produção, usa o Worker publicado por padrão — sem depender de env.
 const CHAT_API_URL =
-  import.meta.env.VITE_CHAT_API_URL ?? 'http://localhost:8787/api/chat';
+  import.meta.env.VITE_CHAT_API_URL ??
+  (import.meta.env.DEV
+    ? 'http://localhost:8787/api/chat'
+    : 'https://aretech-chat.rlnovak.workers.dev/api/chat');
 
 // sessionId estável por visitante, persistido no navegador.
 function getSessionId(): string {
