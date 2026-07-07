@@ -31,8 +31,9 @@
     "SHEET_TAB": "Contatos_site",
     // Calendário onde os agendamentos são criados. Precisa estar compartilhado
     // com o client_email da Service Account (permissão "Fazer alterações nos
-    // eventos"). Use o e-mail do calendário (ex.: contato@aretech.com.br) ou "primary".
-    "CALENDAR_ID": "contato@aretech.com.br",
+    // eventos"). É o "ID da agenda" (secundário tem ID próprio, não o e-mail).
+    // Aqui: calendário "Agendamentos chatbot" na conta noospheraai@gmail.com.
+    "CALENDAR_ID": "10a96d4b2f586fd0d944404108c6d9fad7df556fd1a3cf35c93d5fa7c8661826@group.calendar.google.com",
     // Origens permitidas (CORS). Use "*" em dev; restrinja em produção.
     "ALLOWED_ORIGINS": "https://www.aretech.com.br,https://aretech.com.br,https://aretech-website.pages.dev"
   }
